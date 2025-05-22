@@ -104,13 +104,13 @@ int BoschSensorClass::readAcceleration(float& x, float& y, float& z) {
   struct bmi2_sens_data sensor_data;
   auto ret = bmi2_get_sensor_data(&sensor_data, &bmi2);
   #ifdef TARGET_ARDUINO_NANO33BLE
-  x = -sensor_data.acc.y / INT16_to_G;
-  y = -sensor_data.acc.x / INT16_to_G;
+  x = -sensor_data.acc.y / 2048.0f;
+  y = -sensor_data.acc.x / 2048.0f;
   #else
-  x = sensor_data.acc.x / INT16_to_G;
-  y = sensor_data.acc.y / INT16_to_G;
+  x = sensor_data.acc.x / 2048.0f;
+  y = sensor_data.acc.y / 2048.0f;
   #endif
-  z = sensor_data.acc.z / INT16_to_G;
+  z = sensor_data.acc.z / 2048.0f;
   return (ret == 0);
 }
 
@@ -225,12 +225,12 @@ int8_t BoschSensorClass::configure_sensor(struct bmi2_dev *dev)
   sens_cfg[0].cfg.acc.bwp = BMI2_ACC_OSR2_AVG2;
   sens_cfg[0].cfg.acc.odr = BMI2_ACC_ODR_100HZ;
   sens_cfg[0].cfg.acc.filter_perf = BMI2_PERF_OPT_MODE;
-  sens_cfg[0].cfg.acc.range = BMI2_ACC_RANGE_4G;
+  sens_cfg[0].cfg.acc.range = BMI2_ACC_RANGE_16G;
   sens_cfg[1].type = BMI2_GYRO;
   sens_cfg[1].cfg.gyr.filter_perf = BMI2_PERF_OPT_MODE;
   sens_cfg[1].cfg.gyr.bwp = BMI2_GYR_OSR2_MODE;
   sens_cfg[1].cfg.gyr.odr = BMI2_GYR_ODR_100HZ;
-  sens_cfg[1].cfg.gyr.range = BMI2_GYR_RANGE_2000;
+  sens_cfg[1].cfg.gyr.range = BMI2_GYR_RANGE_1000;
   sens_cfg[1].cfg.gyr.ois_range = BMI2_GYR_OIS_2000;
 
   rslt = bmi2_set_int_pin_config(&int_pin_cfg, dev);
